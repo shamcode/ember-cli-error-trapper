@@ -2,7 +2,8 @@ import Ember from 'ember';
 import { initialize } from 'dummy/instance-initializers/error-trapper';
 import { module, test } from 'qunit';
 import destroyApp from '../../helpers/destroy-app';
-import ERROR_TRAP from 'error-trapper/macros/trap.macro';
+import WRAP from 'error-trapper/macros/wrap-function.macro';
+import PARSE_SCOPE from 'error-trapper/macros/parse-scope.macro';
 
 module('Unit | Instance Initializer | error trapper', {
   beforeEach() {
@@ -21,7 +22,7 @@ test('it works', function(assert) {
   const done = assert.async();
   initialize(this.appInstance);
 
-  ERROR_TRAP(() => {
+  WRAP(() => {
     const foo = { firstName: 'Andy' };
     const bar = foo.lastName.toString; // eslint-disable-line no-unused-vars
   }, (e, context) => {
@@ -38,7 +39,7 @@ test('wrap function', function(assert) {
   const done = assert.async();
   initialize(this.appInstance);
 
-  const func1 = ERROR_TRAP(function(value) {
+  const func1 = WRAP(function(value) {
     return this.settings.baseNumber * value;
   }, (e, context) => {
     const keys = Object.keys( context );
@@ -49,4 +50,22 @@ test('wrap function', function(assert) {
   });
 
   func1();
+});
+
+test('parse scope', function(assert) {
+  const done = assert.async();
+  initialize(this.appInstance);
+  (() => {
+    var foo = 42; // eslint-disable-line no-unused-vars
+    try {
+      return foo.baseNumber.foo * 42;
+    } catch (e) {
+      PARSE_SCOPE((scope) => {
+        const keys = Object.keys(scope);
+        assert.equal(keys.length, 1, '1 variables');
+        assert.equal(scope.foo, 42, 'foo');
+        done();
+      });
+    }
+  })()
 });
