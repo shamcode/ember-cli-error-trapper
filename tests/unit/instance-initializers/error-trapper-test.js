@@ -33,3 +33,20 @@ test('it works', function(assert) {
     done();
   })();
 });
+
+test('wrap function', function(assert) {
+  const done = assert.async();
+  initialize(this.appInstance);
+
+  const func1 = ERROR_TRAP(function(value) {
+    return this.settings.baseNumber * value;
+  }, (e, context) => {
+    const keys = Object.keys( context );
+    assert.ok(e instanceof TypeError, 'must be instance of TypeError');
+    assert.equal(keys.length, 1, '1 variables');
+    assert.equal(context.value, undefined, 'value');
+    done();
+  });
+
+  func1();
+});

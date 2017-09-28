@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-error-trapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The default blueprint for ember-cli addons.",
   "keywords": [
     "ember-addon"
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "ember-cli-babel": "^6.3.0",
-    "error-trapper": "0.1.1"
+    "error-trapper": "0.2.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
