@@ -10,7 +10,7 @@ Ember wrapper for [error-trapper](https://github.com/shamcode/error-trapper)
 
 ## Installation
 ```bash
-ember install ember-abstract-macro
+ember install ember-cli-error-trapper
 ```
 
 ## Addon Maintenance
