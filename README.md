@@ -1,6 +1,19 @@
 # ember-cli-error-trapper
+[![Build Status](https://travis-ci.org/shamcode/ember-cli-error-trapper.svg?branch=master)](https://travis-ci.org/shamcode/ember-cli-error-trapper)
+[![npm version](https://badge.fury.io/js/ember-cli-error-trapper.svg)](https://badge.fury.io/js/ember-cli-error-trapper)
+[![Dependency Status](https://david-dm.org/shamcode/ember-cli-error-trapper.svg)](https://david-dm.org/shamcode/ember-cli-error-trapper)
+[![devDependency Status](https://david-dm.org/shamcode/ember-cli-error-trapper.svg)](https://david-dm.org/shamcode/ember-cli-error-trapper#info=devDependencies)
+[![Ember Observer Score](https://emberobserver.com/badges/ember-cli-error-trapper.svg)](https://emberobserver.com/addons/ember-cli-error-trapper)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
-This README outlines the details of collaborating on this Ember addon.
+Ember wrapper for [error-trapper](https://github.com/shamcode/error-trapper)
+
+## Installation
+```bash
+ember install ember-abstract-macro
+```
+
+## Addon Maintenance
 
 ## Installation
 

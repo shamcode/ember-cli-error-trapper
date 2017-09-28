@@ -4,6 +4,8 @@
 const path = require( 'path' );
 const mergeTrees = require( 'broccoli-merge-trees' );
 const concat = require( 'broccoli-concat' );
+const Funnel = require( 'broccoli-funnel' );
+const { map } = require( 'broccoli-stew' );
 
 function requirePlugin( pluginName ) {
   let plugin = require( pluginName );
@@ -35,7 +37,7 @@ function hasPlugin( plugins, name ) {
 module.exports = {
   name: 'ember-cli-error-trapper',
 
-  _getParentOptions: function() {
+  _getParentOptions() {
     let options;
 
     // The parent can either be an Addon or a Project. If it's an addon,
@@ -50,6 +52,9 @@ module.exports = {
     return options;
   },
 
+  _errorTrapperDir() {
+    return path.dirname( require.resolve( 'error-trapper' ) );
+  },
 
   treeForPublic( tree ) {
     const trees = [];
@@ -58,7 +63,7 @@ module.exports = {
       trees.push( tree );
     }
 
-    const errorTrapperPreBuildTree = path.join( 'node_modules', 'error-trapper', 'lib' );
+    const errorTrapperPreBuildTree = path.join( this._errorTrapperDir(), 'lib' );
 
     trees.push( concat( errorTrapperPreBuildTree, {
       inputFiles: [
@@ -68,6 +73,34 @@ module.exports = {
     } ) );
 
     return mergeTrees( trees );
+  },
+
+  treeForVendor( tree ) {
+    const trees = [];
+
+    if ( undefined !== tree ) {
+      trees.push( tree );
+    }
+
+
+    let errorTrapperTree = new Funnel( this._errorTrapperDir(), {
+      include: [ 'index.js' ],
+      destDir: 'error-trapper',
+    } );
+
+    // Wrap module
+    errorTrapperTree = map( errorTrapperTree, ( content ) => {
+      return `(function(define){${content}})((function() {
+      function newDefine() {
+          return define.apply(null, arguments);
+      }
+      ;newDefine.amd = true;
+      return newDefine;})());`;
+    } );
+
+    trees.push( errorTrapperTree );
+
+    return mergeTrees( trees, { overwrite: true } );
   },
 
   included( app ) {
@@ -91,5 +124,7 @@ module.exports = {
 
       this._registeredWithBabel = true;
     }
+
+    app.import( 'vendor/error-trapper/index.js' );
   }
 };
