@@ -60,11 +60,15 @@ test('parse-scope exports', (assert) => {
         } catch (e) {
           var ___SCOPE_CLOSURE_VARIABLE___;
           try {
-              throw new Error();
+            throw new Error();
           } catch (localError) {
-            ErrorTrapper.parseError(localError, function (parsedError) {
-                var scope = parsedError.success ? ErrorTrapper.normalizeForStringify(eval(parsedError.code)) : {};
-                (function (scope) { return scope; })(scope, ___SCOPE_CLOSURE_VARIABLE___);
+            ErrorTrapper.parseError(localError, function(parsedError) {
+              var scope = {};
+              if (parsedError.success) {
+                scope = ErrorTrapper.normalizeForStringify(eval(parsedError.code));
+                delete scope['Error']; 
+              }
+              (function (scope) { return scope; })(scope, ___SCOPE_CLOSURE_VARIABLE___);
             });
           }
         }
