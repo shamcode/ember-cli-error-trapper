@@ -17,7 +17,7 @@ ember install ember-cli-error-trapper
 
 ## Installation
 
-* `git clone <repository-url>` this repository
+* `git clone https://github.com/shamcode/ember-cli-error-trapper.git`
 * `cd ember-cli-error-trapper`
 * `npm install`
 
