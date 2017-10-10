@@ -11,7 +11,7 @@
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": "https://github.com/shamcode/ember-cli-error-trapper",
   "scripts": {
     "build": "ember build",
     "start": "ember server",
