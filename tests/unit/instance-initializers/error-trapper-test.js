@@ -5,11 +5,18 @@ import destroyApp from '../../helpers/destroy-app';
 import WRAP from 'error-trapper/macros/wrap-function.macro';
 import PARSE_SCOPE from 'error-trapper/macros/parse-scope.macro';
 
+let trapperOnError = function() {};
+
 module('Unit | Instance Initializer | error trapper', {
   beforeEach() {
     Ember.run(() => {
       this.application = Ember.Application.create();
       this.appInstance = this.application.buildInstance();
+      this.appInstance.lookup = () => Ember.Service.extend({
+        onError() {
+          trapperOnError(...arguments);
+        }
+      }).create();
     });
   },
   afterEach() {
@@ -68,4 +75,24 @@ test('parse scope', function(assert) {
       });
     }
   })()
+});
+
+test('global callback', function(assert) {
+  const done = assert.async();
+
+  trapperOnError = (e, scope) => {
+    const keys = Object.keys( scope );
+    assert.ok(e instanceof TypeError, 'must be instance of TypeError');
+    assert.equal(keys.length, 1, '1 variables');
+    assert.equal(scope.value, undefined, 'value');
+    done();
+  };
+
+  initialize(this.appInstance);
+
+  const func1 = WRAP(function(value) {
+    return this.settings.baseNumber * value;
+  });
+
+  func1();
 });
